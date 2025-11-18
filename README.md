@@ -17,6 +17,7 @@ The WhatsApp Cloud API documentation link below offers useful informationa and g
 [external linke to Artificial Intelligence to Combat Audio Fraud: A Flask-Deployed Hybrid Deep Learning System](https://ieeexplore.ieee.org/document/10778737)
 Found that RNN or Recurrent Neural networks were the most accurate type of nerual network for synthetic speech detection. Used ASVSpoof2019, potential training dataset for this project.
 They used the below diagram in experiment setup, usefule to keep: 
+![Ai Training Flow](aiTrainingFlow.png)
 
 [external link to IBM What is a recurrent neural network? by Cole Stryker](https://www.ibm.com/think/topics/recurrent-neural-networks)
 ChatGPT is an example of RNN. This is an ai that takes past inputs and can then make predictions and conlcusions based on those inputs. Example would be for language translation. Taking speech patterns and predciting what the next word should be. Described as being good at taking previous sensor data and using that to compare new data to serach for anomalites. Good pattern recognition and ability to take data and make predictions based on what it has seen. Could be very useful for the purposes of this project, taking previous syntehtic voices and predicting if the current data matches the same pattern as waht it has seen before.
