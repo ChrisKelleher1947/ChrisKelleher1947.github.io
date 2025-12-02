@@ -25,3 +25,21 @@ ChatGPT is an example of an RNN. This is an AI that takes past inputs and can th
 
 [External link to Securing Voice-Based Financial Authentication in the Era of AI Voice Cloning: Challenges, Vulnerabilities, and Counter-Measures](https://alkindipublishers.org/index.php/jcsts/article/view/9576)  
 Discusses the possible effect of synthetic speech on voice verification biometrics. Financial institutions using voice authentication may be impacted by the rise in vishing attacks, possibly able to pass the authentication using only a small sample of the real owner's voice. Paper claims based on a report from the SDK Finance blog, "Researchers demonstrated that targeted voice attacks can achieve a 61% success rate against speaker verification systems even under black-box conditions, with this rate increasing to 90% when attackers possess knowledge of the system internals." Definitely reveals a valid use case for the type of software or machine model I am looking to develop. While the project use case is not for financial institutions, the underlying technology is the same, justification for research. Paper also claims the current projected global cost to be $4.2 billion.
+
+## Refrences
+
+Tech With Tim (2025) How To Build an API with Python (LLM Integration, FastAPI, Ollama & More) [YouTube video]. 21 February 2025. Available at: https://www.youtube.com/watch?v=cy6EAp4iNN4
+(Accessed: 2 December 2025). 
+
+Meta (n.d.) WhatsApp Cloud API Documentation. Available at: https://developers.facebook.com/docs/whatsapp/cloud-api
+(Accessed: 2 December 2025).
+
+Solanki, R. et al. (n.d.) Artificial Intelligence to Combat Audio Fraud: A Flask-Deployed Hybrid Deep Learning System. IEEE / ResearchGate. Available at: https://ieeexplore.ieee.org/document/10778737
+(Accessed: 2 December 2025). 
+
+
+Stryker, C. (n.d.) What is a recurrent neural network? IBM. Available at: https://www.ibm.com/think/topics/recurrent-neural-networks
+(Accessed: 2 December 2025).
+
+Jayakannan, S. M. (2025) ‘Securing Voice-Based Financial Authentication in the Era of AI Voice Cloning: Challenges, Vulnerabilities, and Counter-Measures’, Journal of Computer Science and Technology Studies, 7(4), pp. 515-520. doi: 10.32996/jcsts.2025.7.4.60. 
+
