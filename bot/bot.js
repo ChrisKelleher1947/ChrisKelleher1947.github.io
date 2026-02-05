@@ -32,10 +32,13 @@ async function startBot() {
         const buffer = await downloadMediaMessage(msg, 'buffer')
         fs.writeFileSync('voice.ogg', buffer)
 
-        const form = new FormData()
-        form.append('file', fs.createReadStream('voice.ogg'))
+        const filename = `voice-${Date.now()}.ogg`
+        fs.writeFileSync(filename, buffer)
 
-        const res = await axios.post('http://localhost:8000/transcribe', form, {
+        const form = new FormData()
+        form.append('file', fs.createReadStream(filename))
+        
+        const res = await axios.post('http://127.0.0.1:8000/transcribe', form, {
           headers: form.getHeaders()
         })
 
