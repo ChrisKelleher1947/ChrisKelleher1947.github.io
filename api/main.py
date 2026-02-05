@@ -5,7 +5,7 @@ import shutil
 app = FastAPI()
 
 # Load model once globally
-model = whisper.load_model("small") 
+model = whisper.load_model("tiny") 
 
 @app.post("/transcribe")
 async def transcribe(file: UploadFile = File(...)):
