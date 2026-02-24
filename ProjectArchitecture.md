@@ -23,14 +23,14 @@ with the rest of the project.
 ```mermaid
 flowchart TD
 
-    A["WhatsApp User \n Sends Voice Note"]
+    A["WhatsApp User Sends Voice Note"]
 
     subgraph AWS_Cloud_Environment
-        B["EC2 Instance \n WhatsApp Bot (Baileys)"]
-        C["FastAPI Backend \n Audio Processing"]
-        D["SageMaker Endpoint \n Deepfake Detection Model"]
+        B["EC2 Instance - WhatsApp Bot (Baileys)"]
+        C["FastAPI Backend - Audio Processing"]
+        D["SageMaker Endpoint - Deepfake Detection Model"]
         E["Confidence Score (0–1)"]
-        F["Amazon S3 \n Training Data & Model Artifacts"]
+        F["Amazon S3 - Training Data & Model Artifacts"]
     end
 
     A --> B
@@ -48,11 +48,11 @@ flowchart TD
 ```mermaid
 flowchart LR
 
-    A["Deepfake Audio Datasets\nASVspoof / VoxCeleb"]
-    B["Preprocessing Pipeline\n16kHz Mono\nSilence Removal\nChunking"]
-    C["Feature Extraction\nMel Spectrogram / Raw Audio"]
-    D["Model Training\nCNN / LSTM / Wav2Vec2"]
-    E["Evaluation Metrics\nAccuracy / F1 / ROC-AUC / EER"]
+    A["Deepfake Audio Datasets - ASVspoof / VoxCeleb"]
+    B["Preprocessing Pipeline - 16kHz Mono/ Silence Removal/ Chunking"]
+    C["Feature Extraction - Mel Spectrogram / Raw Audio"]
+    D["Model Training - CNN / LSTM / Wav2Vec2"]
+    E["Evaluation Metrics - Accuracy / F1 / ROC-AUC / EER"]
     F["Best Model Selection"]
     G["Model Artifact (.tar.gz)"]
     H["Amazon S3 Storage"]
