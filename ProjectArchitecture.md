@@ -23,14 +23,14 @@ with the rest of the project.
 ```mermaid
 flowchart TD
 
-    A["WhatsApp User\nSends Voice Note"]
+    A["WhatsApp User \n Sends Voice Note"]
 
     subgraph AWS_Cloud_Environment
-        B["EC2 Instance\nWhatsApp Bot (Baileys)"]
-        C["FastAPI Backend\nAudio Processing"]
-        D["SageMaker Endpoint\nDeepfake Detection Model"]
+        B["EC2 Instance \n WhatsApp Bot (Baileys)"]
+        C["FastAPI Backend \n Audio Processing"]
+        D["SageMaker Endpoint \n Deepfake Detection Model"]
         E["Confidence Score (0–1)"]
-        F["Amazon S3\nTraining Data & Model Artifacts"]
+        F["Amazon S3 \n Training Data & Model Artifacts"]
     end
 
     A --> B
@@ -45,10 +45,6 @@ flowchart TD
 ```
 
 ## Training Diagram
-## Model Training Architecture
-
-## Model Training Architecture
-
 ```mermaid
 flowchart LR
 
