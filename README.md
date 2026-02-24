@@ -2,7 +2,7 @@
 Final Year Project GitHub Pages Repo
 
 # Page Directory
-[Project Architecture](ProjectArchitecure.md)
+[Project Architecture](ProjectArchitecture.md)
 
 # Deepfake Detection Flow
 ![Deepfake Detection Flow](FYP-Diagram.drawio.png)
