@@ -6,6 +6,14 @@ Final Year Project GitHub Pages Repo
 
 [Project Timeline Semester 2](ProjectPlanTimeline.md)
 
+# Model Selection
+| Model       | Pretrained Base            | Fine-tune Target                                 |
+| ----------- | -------------------------- | ------------------------------------------------ |
+| Transformer | `Gustking/wav2vec2`        | Top layers + classification head                 |
+| CNN         | `PANNs cnn14`              | Replace dense output, fine-tune last conv blocks |
+| LSTM        | `OpenL3 embeddings → LSTM` | Train LSTM + final dense layer                   |
+
+
 # Deepfake Detection Flow
 ![Deepfake Detection Flow](FYP-Diagram.drawio.png)
 
