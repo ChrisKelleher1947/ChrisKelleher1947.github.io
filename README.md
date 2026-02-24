@@ -1,6 +1,9 @@
 # FYP-Pages
 Final Year Project GitHub Pages Repo
 
+# Page Directory
+[Project Architecture](ProjectArchitecure.html)
+
 # Deepfake Detection Flow
 ![Deepfake Detection Flow](FYP-Diagram.drawio.png)
 
