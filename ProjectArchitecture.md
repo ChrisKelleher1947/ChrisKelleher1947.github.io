@@ -23,14 +23,14 @@ with the rest of the project.
 ```mermaid
 flowchart TD
 
-    A[WhatsApp User<br/>Sends Voice Note]
+    A["WhatsApp User\nSends Voice Note"]
 
-    subgraph AWS Cloud Environment
-        B[EC2 Instance<br/>WhatsApp Bot (Baileys)]
-        C[FastAPI Backend<br/>Audio Processing]
-        D[Amazon SageMaker Endpoint<br/>Deepfake Detection Model]
-        E[Confidence Score (0–1)]
-        F[Amazon S3<br/>Training Data & Model Artifacts]
+    subgraph AWS_Cloud_Environment
+        B["EC2 Instance\nWhatsApp Bot (Baileys)"]
+        C["FastAPI Backend\nAudio Processing"]
+        D["SageMaker Endpoint\nDeepfake Detection Model"]
+        E["Confidence Score (0–1)"]
+        F["Amazon S3\nTraining Data & Model Artifacts"]
     end
 
     A --> B
@@ -41,32 +41,26 @@ flowchart TD
     C --> B
     B --> A
 
-    F --> D
+    F -. Training Phase .-> D
 ```
 
 ## Training Diagram
 ## Model Training Architecture
 
+## Model Training Architecture
+
 ```mermaid
 flowchart LR
 
-    A[Deepfake Audio Datasets<br/>ASVspoof / VoxCeleb]
-
-    B[Preprocessing Pipeline<br/>16kHz Mono<br/>Silence Removal<br/>Chunking]
-
-    C[Feature Extraction<br/>Mel Spectrogram / Raw Audio]
-
-    D[Model Training<br/>CNN / LSTM / Wav2Vec2]
-
-    E[Evaluation Metrics<br/>Accuracy<br/>F1 Score<br/>ROC-AUC<br/>EER]
-
-    F[Best Model Selection]
-
-    G[Model Artifact (.tar.gz)]
-
-    H[Amazon S3 Storage]
-
-    I[Amazon SageMaker Deployment]
+    A["Deepfake Audio Datasets\nASVspoof / VoxCeleb"]
+    B["Preprocessing Pipeline\n16kHz Mono\nSilence Removal\nChunking"]
+    C["Feature Extraction\nMel Spectrogram / Raw Audio"]
+    D["Model Training\nCNN / LSTM / Wav2Vec2"]
+    E["Evaluation Metrics\nAccuracy / F1 / ROC-AUC / EER"]
+    F["Best Model Selection"]
+    G["Model Artifact (.tar.gz)"]
+    H["Amazon S3 Storage"]
+    I["SageMaker Deployment"]
 
     A --> B
     B --> C
