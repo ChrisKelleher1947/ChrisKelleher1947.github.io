@@ -3,6 +3,7 @@ Final Year Project GitHub Pages Repo
 
 # Page Directory
 [Project Architecture](ProjectArchitecture.md)
+[Project Timeline Semester 2](ProjectPlanTimeline.md)
 
 # Deepfake Detection Flow
 ![Deepfake Detection Flow](FYP-Diagram.drawio.png)
