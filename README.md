@@ -80,3 +80,5 @@ Stryker, C. (n.d.) What is a recurrent neural network? IBM. Available at: https:
 
 Jayakannan, S. M. (2025) ‘Securing Voice-Based Financial Authentication in the Era of AI Voice Cloning: Challenges, Vulnerabilities, and Counter-Measures’, Journal of Computer Science and Technology Studies, 7(4), pp. 515-520. doi: 10.32996/jcsts.2025.7.4.60. 
 
+Stafford, G.A. (2025) 'Fine-Tuning Wav2Vec2 for Real-Time Deepfake Audio Detection', Data Science Collective, 29 December. Available at: https://medium.com/data-science-collective/fine-tuning-wav2vec2-for-real-time-deepfake-audio-detection-b72d7efebdd7
+
