@@ -1,0 +1,32 @@
+# WhatsApp bot
+bot/.wwebjs_auth/
+bot/.wwebjs_cache/
+bot/auth/
+bot/tokens/
+bot/collected_voice_notes/
+bot/node_modules/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Models / training
+api/model/
+Model-Training-Files/models/
+*.pt
+*.pth
+*.h5
+
+# Audio
+*.ogg
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
