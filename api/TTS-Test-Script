@@ -1,0 +1,74 @@
+import os
+import subprocess
+import requests
+from gtts import gTTS
+
+# Config
+TEXT = "Hello, this is a synthetic voice designed to test deepfake detection."
+MP3_FILE = "tts_output.mp3"
+WAV_FILE = "tts_output.wav"
+API_URL = "http://127.0.0.1:8000/detect"
+SAMPLE_RATE = 16000
+
+# Generate TTS
+def generate_tts(text):
+    print("Generating synthetic speech...")
+    tts = gTTS(text=text, lang='en')
+    tts.save(MP3_FILE)
+    print(f"Saved: {MP3_FILE}")
+
+
+
+# Convert to WAV
+def convert_to_wav():
+    print("Converting to 16kHz mono WAV...")
+
+    result = subprocess.run([
+        "ffmpeg", "-y",
+        "-i", MP3_FILE,
+        "-ar", str(SAMPLE_RATE),
+        "-ac", "1",
+        "-sample_fmt", "s16",
+        WAV_FILE
+    ], capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print(result.stderr)
+        raise Exception("FFmpeg conversion failed")
+
+    print(f"Saved: {WAV_FILE}")
+
+
+# Send to Model
+def send_to_model():
+    print("Sending to model...")
+
+    with open(WAV_FILE, "rb") as f:
+        response = requests.post(
+            API_URL,
+            files={"file": ("audio.wav", f, "audio/wav")}
+        )
+
+    if response.status_code != 200:
+        print(response.text)
+        raise Exception("API request failed")
+
+    return response.json()
+
+
+# Run Test
+if __name__ == "__main__":
+    try:
+        generate_tts(TEXT)
+        convert_to_wav()
+
+        result = send_to_model()
+
+        print("\n=== MODEL RESPONSE ===")
+        print(result)
+
+        print("\n🎧 You can listen to the audio here:")
+        print(os.path.abspath(WAV_FILE))
+
+    finally:
+        pass

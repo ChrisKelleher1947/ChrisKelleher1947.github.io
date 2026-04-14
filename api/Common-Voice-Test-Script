@@ -1,0 +1,63 @@
+import os
+import subprocess
+import requests
+
+# Config
+INPUT_AUDIO = r"C:\deepfake-project\data\commonvoice\cv-corpus-24.0-2025-12-05\en\clips\common_voice_en_20.mp3"
+TEMP_WAV    = "temp_test.wav"
+API_URL     = "http://127.0.0.1:8000/detect"
+
+SAMPLE_RATE = 16000
+
+# Convert audio
+def convert_to_wav(input_path, output_path):
+    print(f"Converting: {input_path}")
+
+    result = subprocess.run([
+        "ffmpeg", "-y",
+        "-i", input_path,
+        "-ar", str(SAMPLE_RATE),
+        "-ac", "1",
+        "-sample_fmt", "s16",
+        output_path
+    ], capture_output=True, text=True)
+
+    if result.returncode != 0:
+        print("FFmpeg error:")
+        print(result.stderr)
+        raise Exception("Conversion failed")
+
+    print("Conversion complete\n")
+
+
+# Send to API
+def send_to_model(wav_path):
+    print(f"Sending to model: {wav_path}")
+
+    with open(wav_path, "rb") as f:
+        response = requests.post(
+            API_URL,
+            files={"file": ("audio.wav", f, "audio/wav")}
+        )
+
+    if response.status_code != 200:
+        print("API Error:", response.text)
+        raise Exception("Request failed")
+
+    return response.json()
+
+
+# Run test
+if __name__ == "__main__":
+
+    try:
+        convert_to_wav(INPUT_AUDIO, TEMP_WAV)
+
+        result = send_to_model(TEMP_WAV)
+
+        print("\n=== MODEL RESPONSE ===")
+        print(result)
+
+    finally:
+        if os.path.exists(TEMP_WAV):
+            os.remove(TEMP_WAV)
