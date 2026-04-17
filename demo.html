@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deepfake Audio Detector - Demo</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 750px;
+            margin: 50px auto;
+            background: #f4f6f8;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        p {
+            color: #555;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        }
+
+        /* DROP ZONE */
+        .drop-zone {
+            border: 2px dashed #bbb;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .drop-zone.dragover {
+            border-color: #007BFF;
+            background: #eef6ff;
+        }
+
+        input {
+            display: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        audio {
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* SPINNER */
+        .spinner {
+            margin: 20px auto;
+            border: 5px solid #eee;
+            border-top: 5px solid #007BFF;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .real { color: green; font-weight: bold; }
+        .fake { color: red; font-weight: bold; }
+
+        .small {
+            font-size: 12px;
+            color: #777;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <h1>🎤 Deepfake Audio Detector</h1>
+    <p>Upload or drag an audio file to analyse it</p>
+
+    <!-- DROP ZONE -->
+    <div class="drop-zone" id="dropZone">
+        <p>⬆️ Drag & drop audio here or click to select</p>
+        <input type="file" id="fileInput" accept="audio/*">
+    </div>
+
+    <!-- AUDIO PREVIEW -->
+    <audio id="audioPreview" controls style="display:none;"></audio>
+
+    <br>
+    <button onclick="uploadFile()">Analyse Audio</button>
+
+    <!-- LOADING -->
+    <div class="spinner" id="spinner"></div>
+    <p id="status"></p>
+
+    <!-- RESULT -->
+    <div id="result"></div>
+
+    <p class="small">
+        Best results with high-quality audio. Compressed voice notes may reduce accuracy.
+    </p>
+
+</div>
+
+<script>
+    const fileInput = document.getElementById("fileInput");
+    const dropZone = document.getElementById("dropZone");
+    const audioPreview = document.getElementById("audioPreview");
+    const spinner = document.getElementById("spinner");
+    const status = document.getElementById("status");
+    const resultDiv = document.getElementById("result");
+
+    let selectedFile = null;
+
+    // Click to Upload
+    dropZone.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", (e) => {
+        handleFile(e.target.files[0]);
+    });
+
+    // Drag and Drop
+    dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropZone.classList.add("dragover");
+    });
+
+    dropZone.addEventListener("dragleave", () => {
+        dropZone.classList.remove("dragover");
+    });
+
+    dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropZone.classList.remove("dragover");
+        handleFile(e.dataTransfer.files[0]);
+    });
+
+    function handleFile(file) {
+        if (!file) return;
+
+        selectedFile = file;
+
+        // show audio preview
+        const url = URL.createObjectURL(file);
+        audioPreview.src = url;
+        audioPreview.style.display = "block";
+
+        status.innerText = "File loaded: " + file.name;
+        resultDiv.innerHTML = "";
+    }
+
+    async function uploadFile() {
+        if (!selectedFile) {
+            alert("Please select a file first.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        spinner.style.display = "block";
+        status.innerText = "Analysing audio...";
+        resultDiv.innerHTML = "";
+
+        try {
+            const response = await fetch("http://192.168.68.68:8000/detect", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            const cls = data.verdict === "REAL" ? "real" : "fake";
+
+            resultDiv.innerHTML = `
+                <div class="${cls}">
+                    Verdict: ${data.verdict}
+                </div>
+                <div>Confidence (Real): ${(data.confidence_real * 100).toFixed(1)}%</div>
+                <div>Confidence (Fake): ${(data.confidence_fake * 100).toFixed(1)}%</div>
+            `;
+
+            status.innerText = "Analysis complete.";
+
+        } catch (err) {
+            console.error(err);
+            status.innerText = "Error connecting to server.";
+        }
+
+        spinner.style.display = "none";
+    }
+</script>
+
+</body>
+</html>

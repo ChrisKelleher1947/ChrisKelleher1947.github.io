@@ -5,6 +5,11 @@ Final Year Project GitHub Pages Repo
 [Project Architecture](ProjectArchitecture.md)
 
 [Project Timeline Semester 2](ProjectPlanTimeline.md)
+<h2>Live Demo</h2>
+<p>Try the deepfake detection model in action:</p>
+<a href="demo.html">
+    <button>Launch Demo</button>
+</a>
 
 # Model Selection
 | Model       | Pretrained Base            | Fine-tune Target                                 |
