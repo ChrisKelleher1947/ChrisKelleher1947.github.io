@@ -208,10 +208,25 @@ async function startRecording() {
         const audioCtx = new AudioContext();
         const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
 
-        const samples = audioBuffer.getChannelData(0);
+        const targetRate = 16000;
+
+        const offlineCtx = new OfflineAudioContext(
+            1,
+            audioBuffer.duration * targetRate,
+            targetRate
+        );
+
+        const source = offlineCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.connect(offlineCtx.destination);
+        source.start();
+
+        const renderedBuffer = await offlineCtx.startRendering();
+        const samples = renderedBuffer.getChannelData(0);
+
 
         // Convert to MP3
-        const mp3encoder = new lamejs.Mp3Encoder(1, 44100, 128);
+        const mp3encoder = new lamejs.Mp3Encoder(1, 16000, 128);
         let mp3Data = [];
 
         let sampleBlockSize = 1152;
