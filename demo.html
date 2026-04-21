@@ -191,7 +191,7 @@ function preview(file) {
     status.innerText = "File ready: " + file.name;
 }
 
-// 🎙 RECORDING
+// RECORDING
 async function startRecording() {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
@@ -247,7 +247,7 @@ function stopRecording() {
     }
 }
 
-// 🚀 Upload
+// Upload
 async function uploadFile() {
     if (!selectedFile) {
         alert("Please select or record audio first.");
