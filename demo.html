@@ -201,55 +201,12 @@ async function startRecording() {
     mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
 
     mediaRecorder.onstop = async () => {
-        const blob = new Blob(recordedChunks);
+        const blob = new Blob(recordedChunks, { type: "audio/webm" });
 
-        // Convert to PCM
-        const arrayBuffer = await blob.arrayBuffer();
-        const audioCtx = new AudioContext();
-        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        selectedFile = new File([blob], "recording.webm");
 
-        const targetRate = 16000;
-
-        const offlineCtx = new OfflineAudioContext(
-            1,
-            audioBuffer.duration * targetRate,
-            targetRate
-        );
-
-        const source = offlineCtx.createBufferSource();
-        source.buffer = audioBuffer;
-        source.connect(offlineCtx.destination);
-        source.start();
-
-        const renderedBuffer = await offlineCtx.startRendering();
-        const samples = renderedBuffer.getChannelData(0);
-
-
-        // Convert to MP3
-        const mp3encoder = new lamejs.Mp3Encoder(1, 16000, 128);
-        let mp3Data = [];
-
-        let sampleBlockSize = 1152;
-        for (let i = 0; i < samples.length; i += sampleBlockSize) {
-            let sampleChunk = samples.subarray(i, i + sampleBlockSize);
-            let int16Chunk = new Int16Array(sampleChunk.length);
-
-            for (let j = 0; j < sampleChunk.length; j++) {
-                int16Chunk[j] = sampleChunk[j] * 32767;
-            }
-
-            let mp3buf = mp3encoder.encodeBuffer(int16Chunk);
-            if (mp3buf.length > 0) mp3Data.push(mp3buf);
-        }
-
-        let mp3buf = mp3encoder.flush();
-        if (mp3buf.length > 0) mp3Data.push(mp3buf);
-
-        const mp3Blob = new Blob(mp3Data, { type: "audio/mp3" });
-
-        selectedFile = new File([mp3Blob], "recording.mp3");
         preview(selectedFile);
-        status.innerText = "Recording ready (MP3)";
+        status.innerText = "Recording ready";
     };
 
     mediaRecorder.start();
