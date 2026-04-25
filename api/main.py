@@ -12,13 +12,15 @@ from transformers import Wav2Vec2ForSequenceClassification, Wav2Vec2FeatureExtra
 # Config
 MODEL_DIR = "./model"
 SAMPLE_RATE = 16000
-MAX_SAMPLES = 64000   # 4 seconds
+
+WINDOW_SIZE = 64000      # 4 seconds
+STRIDE = 32000           # 2 seconds overlap
+
 FAKE_THRESHOLD = 0.5
 
 # App Setup
 app = FastAPI()
 
-# Allow GitHub Pages and ngrok frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -43,9 +45,6 @@ if device.type == "cuda" and next(model.parameters()).dtype == torch.bfloat16:
 
 print(f"Model loaded on {device}")
 
-print("Label config:")
-print(model.config.id2label)
-
 LABELS_ARE_SWAPPED = False
 
 if model.config.id2label == {0: "LABEL_0", 1: "LABEL_1"}:
@@ -60,8 +59,26 @@ print("System ready\n")
 def health():
     return {
         "status": "running",
-        "model": "wav2vec2-deepfake-detector"
+        "model": "wav2vec2-deepfake-multiframe"
     }
+
+# Windowing Function
+def create_windows(audio, window_size, stride):
+    if len(audio) <= window_size:
+        return [np.pad(audio, (0, window_size - len(audio)))]
+
+    windows = []
+
+    for start in range(0, len(audio) - window_size + 1, stride):
+        windows.append(audio[start:start + window_size])
+
+    # ensure last window is included
+    last_start = len(audio) - window_size
+    if windows[-1].shape[0] != window_size:
+        windows.append(audio[last_start:last_start + window_size])
+
+    return windows
+
 
 # Main Route
 @app.post("/detect")
@@ -73,11 +90,10 @@ async def detect(file: UploadFile = File(...)):
     output_path = f"temp_output_{job_id}.wav"
 
     try:
-        # Save upload
         with open(input_path, "wb") as f:
             f.write(await file.read())
 
-        # Convert audio
+        # Convert Audio
         result = subprocess.run([
             "ffmpeg", "-y",
             "-i", input_path,
@@ -95,50 +111,56 @@ async def detect(file: UploadFile = File(...)):
                 "confidence_fake": 0.0
             }
 
-        # Load audio
+        # Load Audio
         audio, _ = sf.read(output_path, dtype="float32")
 
-        print(f"Audio: {len(audio)} samples")
+        print(f"Audio loaded: {len(audio)} samples")
 
-        # Trim / pad
-        if len(audio) >= MAX_SAMPLES:
-            audio = audio[:MAX_SAMPLES]
-        else:
-            audio = np.pad(audio, (0, MAX_SAMPLES - len(audio)))
+        # Create Windows
+        windows = create_windows(audio, WINDOW_SIZE, STRIDE)
 
-        # Normalize
-        peak = np.abs(audio).max()
-        if peak > 0:
-            audio = audio / peak
+        print(f"Processing {len(windows)} windows")
 
-        # Feature extraction
-        inputs = feature_extractor(
-            audio,
-            sampling_rate=SAMPLE_RATE,
-            return_tensors="pt",
-            padding=False
-        )
+        all_probs = []
 
-        input_values = inputs["input_values"].to(device)
+        # Inference per window
+        for window in windows:
 
-        if next(model.parameters()).dtype == torch.bfloat16:
-            input_values = input_values.bfloat16()
+            # Normalize per window
+            peak = np.abs(window).max()
+            if peak > 0:
+                window = window / peak
 
-        # Inference
-        with torch.no_grad():
-            outputs = model(input_values=input_values)
-            logits = outputs.logits[0].float()
-            probs = torch.softmax(logits, dim=-1)
+            inputs = feature_extractor(
+                window,
+                sampling_rate=SAMPLE_RATE,
+                return_tensors="pt",
+                padding=False
+            )
 
-        probs = probs.cpu().numpy()
+            input_values = inputs["input_values"].to(device)
 
-        # Handle labels
+            if next(model.parameters()).dtype == torch.bfloat16:
+                input_values = input_values.bfloat16()
+
+            with torch.no_grad():
+                outputs = model(input_values=input_values)
+                logits = outputs.logits[0].float()
+                probs = torch.softmax(logits, dim=-1)
+
+            all_probs.append(probs.cpu().numpy())
+
+        # Avergae Voting
+        all_probs = np.array(all_probs)
+        avg_probs = np.mean(all_probs, axis=0)
+
+        # Label Handling
         if LABELS_ARE_SWAPPED:
-            confidence_real = float(probs[1])
-            confidence_fake = float(probs[0])
+            confidence_real = float(avg_probs[1])
+            confidence_fake = float(avg_probs[0])
         else:
-            confidence_real = float(probs[0])
-            confidence_fake = float(probs[1])
+            confidence_real = float(avg_probs[0])
+            confidence_fake = float(avg_probs[1])
 
         verdict = "FAKE" if confidence_fake >= FAKE_THRESHOLD else "REAL"
 
@@ -147,7 +169,8 @@ async def detect(file: UploadFile = File(...)):
         return {
             "verdict": verdict,
             "confidence_real": round(confidence_real, 3),
-            "confidence_fake": round(confidence_fake, 3)
+            "confidence_fake": round(confidence_fake, 3),
+            "windows_processed": len(windows)
         }
 
     except Exception as e:
@@ -160,7 +183,6 @@ async def detect(file: UploadFile = File(...)):
         }
 
     finally:
-        # cleanup safely
         try:
             if os.path.exists(input_path):
                 os.remove(input_path)
