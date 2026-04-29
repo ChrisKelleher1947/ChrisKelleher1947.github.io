@@ -29,7 +29,6 @@ def convert_to_wav(input_path, output_path):
 
     print("Conversion complete\n")
 
-
 # Send to API
 def send_to_model(wav_path):
     print(f"Sending to model: {wav_path}")
@@ -45,7 +44,6 @@ def send_to_model(wav_path):
         raise Exception("Request failed")
 
     return response.json()
-
 
 # Run test
 if __name__ == "__main__":

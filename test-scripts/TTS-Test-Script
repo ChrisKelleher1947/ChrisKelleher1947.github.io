@@ -17,8 +17,6 @@ def generate_tts(text):
     tts.save(MP3_FILE)
     print(f"Saved: {MP3_FILE}")
 
-
-
 # Convert to WAV
 def convert_to_wav():
     print("Converting to 16kHz mono WAV...")
@@ -54,7 +52,6 @@ def send_to_model():
         raise Exception("API request failed")
 
     return response.json()
-
 
 # Run Test
 if __name__ == "__main__":
