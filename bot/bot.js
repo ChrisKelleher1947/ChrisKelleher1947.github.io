@@ -25,7 +25,7 @@ const client = new Client({
 client.on('qr', (qr) => {
   console.log('\nQR Code generated. Scan with WhatsApp:\n')
   qrcode.generate(qr, { small: true })
-  console.log('\nOr open WhatsApp and scan the QR above ↑\n')
+  console.log('\nOr open WhatsApp and scan the QR above\n')
 })
 
 client.on('ready', () => {
@@ -45,7 +45,7 @@ client.on('disconnected', (reason) => {
   console.log('Client disconnected:', reason)
 })
 
-// Log ALL incoming messages (for debugging)
+// Log all incoming messages
 client.on('message', async (message) => {
   const timestamp = new Date().toLocaleTimeString('en-IE', { hour12: false })
   const contact = await message.getContact()
@@ -54,15 +54,15 @@ client.on('message', async (message) => {
   // Log every message received
   console.log(`[${timestamp}] Message from ${senderName}: ${message.type}`)
   
-  // Handle both original voice messages (ptt) and regular audio messages
+  // Handle both original voice messages ptt and regular audio messages
   const isVoiceMessage = message.hasMedia && (message.type === 'ptt' || message.type === 'audio')
   
   if (!isVoiceMessage) {
-    // Log non-voice messages but don't process them
+    // Log non voice messages but don't process them
     if (message.type === 'chat') {
-      console.log(`  ↳ Text: "${message.body.substring(0, 50)}${message.body.length > 50 ? '...' : ''}"`)
+      console.log(`Text: "${message.body.substring(0, 50)}${message.body.length > 50 ? '...' : ''}"`)
     } else {
-      console.log(`  ↳ Skipping (not a voice message)`)
+      console.log(`Skipping (not a voice message)`)
     }
     return
   }
@@ -78,25 +78,21 @@ client.on('message', async (message) => {
   console.log(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`)
   
   try {
-    // Send immediate acknowledgement
     await message.reply('Received your voice message. Analysing for deepfake detection...')
     
-    console.log('→ Downloading audio...')
+    console.log('Downloading audio...')
     const media = await message.downloadMedia()
     const buffer = Buffer.from(media.data, 'base64')
+
+    console.log(`Audio size: ${(buffer.length / 1024).toFixed(2)} KB`)
     
-    const SAVE_DIR = './collected_voice_notes'
-    if (!fs.existsSync(SAVE_DIR)) fs.mkdirSync(SAVE_DIR, { recursive: true })
-    const filename = `voice-${Date.now()}.ogg`
-    const savePath = `${SAVE_DIR}/${filename}`
-    fs.writeFileSync(savePath, buffer)
-    console.log(`✓ Saved as ${savePath} (${(buffer.length / 1024).toFixed(2)} KB)`)
-    
-    // Send to deepfake detection API
     const form = new FormData()
-    form.append('file', fs.createReadStream(savePath))
+    form.append('file', buffer, {
+      filename: 'audio.ogg',
+      contentType: 'audio/ogg'
+    })
     
-    console.log('→ Sending to deepfake detection model...')
+    console.log('Sending to deepfake detection model...')
     const startTime = Date.now()
     
     const res = await axios.post('http://127.0.0.1:8000/detect', form, {
@@ -112,10 +108,8 @@ client.on('message', async (message) => {
     console.log(`  Real: ${(confidence_real * 100).toFixed(1)}%`)
     console.log(`  Fake: ${(confidence_fake * 100).toFixed(1)}%`)
     
-    // Format response message
-    const emoji = verdict === 'REAL' ? '✅' : '⚠️'
     const resultMessage = 
-      `${emoji} Deepfake Detection Result\n\n` +
+      `Deepfake Detection Result\n\n` +
       `Verdict: ${verdict}\n` +
       `Confidence (Real): ${(confidence_real * 100).toFixed(1)}%\n` +
       `Confidence (Fake): ${(confidence_fake * 100).toFixed(1)}%\n\n` +
@@ -136,5 +130,5 @@ client.on('message', async (message) => {
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 console.log('WhatsApp Deepfake Detection Bot')
 console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n')
-console.log('→ Starting bot...\n')
+console.log('Starting bot...\n')
 client.initialize()
