@@ -11,6 +11,9 @@ This project presents the design, training, and deployment of an AI deepfake voi
 
 A cloud architecture is used to support scalability, integrating a WhatsApp bot, a FastAPI backend, and a machine learning model hosted on AWS SageMaker.
 
+![Project Poster](ChrisKelleher-20101947-FYP-Poster.png)
+
+
 ---
 
 ## Live Demo
