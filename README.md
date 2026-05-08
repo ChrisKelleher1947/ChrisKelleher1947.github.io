@@ -1,26 +1,6 @@
 # Deepfake Voice Detection System
 
-Final Year Project — AI-Based Synthetic Speech Detection Platform
-
----
-
-## Navigation
-
-| Section | Link |
-|---|---|
-| Live Demo | [Open Demo](demo.html) |
-| Full Technical Report | [View Report PDF](FYP-Semester-2-Report-20101947-ChrisKelleher.pdf) |
-| Project Architecture | [ProjectArchitecture.md](ProjectArchitecture.md) |
-| Project Timeline | [ProjectPlanTimeline.md](ProjectPlanTimeline.md) |
-| Dataset Exploration | [DatasetExploration.md](DatasetExploration.md) |
-| Wav2Vec2 Training | [Wav2Vec2Training.md](Wav2Vec2Training.md) |
-| LSTM Development | [LSTMDevelopment.md](LSTMDevelopment.md) |
-| CNN14 PANNs Model | [CNN14Model.md](CNN14Model.md) |
-| Evaluation Results | [Evaluation.md](Evaluation.md) |
-| System Evaluation | [SystemEvaluation.md](SystemEvaluation.md) |
-| Future Work | [FutureWork.md](FutureWork.md) |
-| Glossary | [Glossary.md](Glossary.md) |
-| References | [References.md](References.md) |
+Final Year Project — Deepfake Voice Detection Using Deep Learning with Real-Time WhatsApp Integration
 
 ---
 
@@ -30,10 +10,10 @@ This project presents the design, training, evaluation, and deployment of an AI-
 
 The system combines:
 
-- Deep learning-based audio classification
+- Deep learning audio classification
 - Cloud-hosted inference
 - A WhatsApp chatbot interface
-- A browser-based testing platform
+- A browser testing platform
 - Real-time backend processing
 
 The primary objective was to investigate whether modern speech models could be integrated into widely used communication platforms to provide accessible deepfake voice detection for real-world users.
@@ -104,10 +84,6 @@ The project began with a full exploration of the ASVspoof 2019 Logical Access da
 - Audio distribution analysis
 - Frequency-domain inspection
 
-### View Section
-
-[Open Dataset Exploration](DatasetExploration.md)
-
 ---
 
 ## 2. Wav2Vec2 Training Pipeline
@@ -137,10 +113,6 @@ The primary model used in this project was a fine-tuned Wav2Vec2 transformer arc
 - Early stopping
 - ROC-AUC evaluation
 
-### View Section
-
-[Open Wav2Vec2 Training](Wav2Vec2Training.md)
-
 ---
 
 ## 3. LSTM Model Development
@@ -163,10 +135,6 @@ A bidirectional LSTM architecture was implemented as a secondary comparison mode
 - Training configuration
 - Evaluation pipeline
 
-### View Section
-
-[Open LSTM Development](LSTMDevelopment.md)
-
 ---
 
 ## 4. CNN14 PANNs Model
@@ -187,10 +155,6 @@ The CNN14 architecture from the PANNs framework was implemented as a convolution
 - Forward pass implementation
 - Loss calculation
 - Evaluation pipeline
-
-### View Section
-
-[Open CNN14 Model](CNN14Model.md)
 
 ---
 
@@ -221,10 +185,6 @@ All models were evaluated using identical preprocessing pipelines and evaluation
 - ROC-AUC curves
 - Comparative model analysis
 
-### View Section
-
-[Open Evaluation Results](Evaluation.md)
-
 ---
 
 ## 6. System Evaluation
@@ -246,10 +206,6 @@ The complete end-to-end system was evaluated under real-world conditions.
 - Compression artefacts heavily affect classification accuracy
 - Windowing improves robustness on long-form audio
 
-### View Section
-
-[Open System Evaluation](SystemEvaluation.md)
-
 ---
 
 ## 7. Cloud System Architecture
@@ -262,15 +218,14 @@ The deployed system uses a distributed cloud architecture.
 |---|---|
 | WhatsApp Bot | User interaction |
 | FastAPI Backend | Audio processing |
-| AWS EC2 | Backend hosting |
-| SageMaker | Model inference |
+| AWS EC2 | Backend hosting and Model Inference |
 | FFmpeg | Audio conversion |
 
 ---
 
 ## System Architecture Diagram
 
-![Architecture Diagram](FYP-Diagram.drawio.png)
+![Architecture Diagram](Project_Diagram.png)
 
 ---
 
@@ -321,7 +276,7 @@ WhatsApp voice compression introduces severe audio degradation through the Opus 
 
 Several future improvements were identified during evaluation.
 
-### Planned Enhancements
+### Possible Enhancements
 
 - Increased real-world training data
 - More aggressive codec simulation
@@ -330,10 +285,6 @@ Several future improvements were identified during evaluation.
 - Official WhatsApp Business API integration
 - Real-time call analysis
 - Improved explainability tools
-
-### View Section
-
-[Open Future Work](FutureWork.md)
 
 ---
 
@@ -395,23 +346,5 @@ The implemented platform combines:
 While strong performance was achieved on high-quality audio, the project also highlights the difficulty of detecting synthetic speech in heavily compressed real-world environments.
 
 The system provides a strong foundation for future research into practical and scalable deepfake voice detection technologies.
-
----
-
-# Additional Pages
-
-| Page | Description |
-|---|---|
-| [ProjectArchitecture.md](ProjectArchitecture.md) | Cloud system architecture |
-| [ProjectPlanTimeline.md](ProjectPlanTimeline.md) | Semester timeline |
-| [DatasetExploration.md](DatasetExploration.md) | Dataset analysis |
-| [Wav2Vec2Training.md](Wav2Vec2Training.md) | Transformer training pipeline |
-| [LSTMDevelopment.md](LSTMDevelopment.md) | LSTM implementation |
-| [CNN14Model.md](CNN14Model.md) | CNN14 architecture |
-| [Evaluation.md](Evaluation.md) | Model evaluation |
-| [SystemEvaluation.md](SystemEvaluation.md) | Real-world testing |
-| [FutureWork.md](FutureWork.md) | Planned improvements |
-| [Glossary.md](Glossary.md) | Technical terminology |
-| [References.md](References.md) | Academic references |
 
 ---
