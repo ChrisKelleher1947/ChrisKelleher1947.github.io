@@ -6,6 +6,8 @@ Final Year Project — Deepfake Voice Detection Using Deep Learning with Real-Ti
 
 ## Project Overview
 
+[Project Documentation](FYP-Semester-2-Report-20101947-ChrisKelleher.pdf)
+
 This project presents the design, training, evaluation, and deployment of an AI-driven deepfake voice detection system capable of identifying synthetic speech from real human speech.
 
 The system combines:
