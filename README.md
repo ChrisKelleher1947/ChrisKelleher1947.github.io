@@ -1,162 +1,289 @@
-# FYP Pages  
-Final Year Project GitHub Pages Repository
-Project Repo: https://github.com/ChrisKelleher1947/ChrisKelleher1947.github.io
-[Final Report/Documentaion](FYP-Semester-2-Report-20101947-ChrisKelleher.pdf)
+# Deepfake Voice Detection System
+
+Final Year Project Repository
+
+[View Full Report](FYP-Semester-2-Report-20101947-ChrisKelleher.pdf)
 
 ---
 
 ## Project Overview
 
-This project presents the design, training, and deployment of an AI deepfake voice detection system. The system is capable of analysing audio input and returning a confidence score indicating whether the audio is genuine or synthetic.
+This project presents the design, training, and deployment of a deepfake voice detection system capable of identifying synthetic speech using deep learning.
 
-A cloud architecture is used to support scalability, integrating a WhatsApp bot, a FastAPI backend, and a machine learning model hosted on AWS SageMaker.
+The platform integrates:
+
+- Deep learning audio classification
+- WhatsApp chatbot integration
+- FastAPI backend infrastructure
+- AWS cloud deployment
+- Real-time inference
+- Audio preprocessing and augmentation
+
+Users can submit audio through a web interface or WhatsApp bot and receive a prediction indicating whether the speech is:
+
+- Bonafide (real human speech)
+- Spoofed (AI-generated or synthetic speech)
+
+---
+
+## Project Poster
 
 ![Project Poster](ChrisKelleher-20101947-FYP-Poster.png)
 
+---
+
+# Live Demo
+
+Test the deployed deepfake detection system below:
+
+<p align="center">
+  <a href="demo.html">
+    <img src="https://img.shields.io/badge/Open-Live_Demo-blue?style=for-the-badge">
+  </a>
+</p>
+
+### Important Notes
+
+- Best performance is achieved using high-quality audio
+- Heavy compression may reduce accuracy
+- WhatsApp voice notes are significantly more difficult to classify due to Opus compression artefacts
 
 ---
 
-## Live Demo
+# Documentation
 
-Interact with the deepfake detection model below:
+## Core Project Pages
 
-<a href="demo.html">
-    <button>Open Live Demo</button>
-</a>
-
-*Note: Best results are achieved with high-quality audio. Heavily compressed audio may reduce detection accuracy.*
-
----
-
-## Page Directory
-
-- [Project Architecture](ProjectArchitecture.md)  
-- [Project Timeline Semester 2](ProjectPlanTimeline.md)
-
----
-
-## Model Selection
-
-| Model       | Pretrained Base             | Fine-tuning Strategy                                      |
-|-------------|-----------------------------|-----------------------------------------------------------|
-| Transformer | `Gustking/wav2vec2`         | Fine-tune upper layers + classification head              |
-| CNN         | `PANNs cnn14`               | Replace dense output and fine-tune final convolutional layers |
-| LSTM        | `OpenL3 embeddings → LSTM`  | Train LSTM layers with a final dense classification layer |
+| Page | Description |
+|---|---|
+| [Project Architecture](ProjectArchitecture.md) | Full system architecture and cloud deployment |
+| [Training Pipeline](TrainingPipeline.md) | Data preprocessing, augmentation, and training |
+| [Wav2Vec2 Model](Wav2Vec2.md) | Transformer model implementation |
+| [LSTM Model](LSTM.md) | Sequential spectrogram model |
+| [CNN14 Model](CNN14.md) | PANNs CNN implementation |
+| [Evaluation Results](Evaluation.md) | ROC-AUC, accuracy, and comparative evaluation |
+| [WhatsApp Integration](WhatsAppBot.md) | WhatsApp bot implementation |
+| [Deployment](Deployment.md) | AWS EC2 and SageMaker deployment |
+| [Future Work](FutureWork.md) | Planned improvements and research |
+| [Project Timeline](ProjectPlanTimeline.md) | Semester timeline and milestones |
 
 ---
 
-## Deepfake Detection Flow
+# Deepfake Detection Flow
 
 ![Deepfake Detection Flow](FYP-Diagram.drawio.png)
 
 The system operates as follows:
 
-1. A user submits an audio sample via WhatsApp or the web interface  
-2. The audio is received by the backend system  
-3. The FastAPI backend processes and formats the audio  
-4. The processed audio is sent to the deployed model  
-5. The model returns confidence scores for “real” and “fake” classifications  
-6. The result is returned to the user  
-
----
-
-## System Architecture
-
-The final system is built using a cloud architecture:
-
-- **WhatsApp Bot (Node.js / WhatsApp-web)** for user interaction  
-- **FastAPI Backend** for audio processing and API handling  
-- **Amazon SageMaker** for model deployment  
-- **Amazon EC2** for server deployment  
-
-This architecture enables scalability and separation of concerns across system components.
-
----
-
-## Training Pipeline
-
-![AI Training Flow](aiTrainingFlow.png)
-
-The training process follows a structured pipeline:
-
-1. **Datasets**  
-   - ASVspoof    
-
-2. **Preprocessing**  
-   - Audio resampled to 16kHz mono  
-   - Silence trimming  
-   - Normalisation  
-   - Fixed length segmentation  
-
-3. **Feature Extraction**  
-   - Log-Mel Spectrograms  
-   - Raw waveform input (for transformer models)  
-
-4. **Model Training**  
-   - CNN, LSTM, and Transformer architectures evaluated  
-
-5. **Evaluation Metrics**  
-   - Accuracy  
-   - Precision / Recall  
-   - F1 Score  
-   - ROC-AUC  
-   - Equal Error Rate (EER)  
-
-6. **Model Selection**  
-   - Best performing model selected based on performance and stability  
-
-7. **Deployment**  
-   - Model packaged and deployed via SageMaker endpoint  
-
----
-
-## Standardised Experimental Methodology
-
-To ensure fair and scientifically valid comparisons between models:
-
-- Identical preprocessing pipeline  
-- Identical dataset splits  
-- Identical training configuration  
-- Identical evaluation metrics  
-- Only variable changed: **model architecture**
-
-This ensures that performance differences are attributable solely to the model design.
-
----
-
-## Final System Workflow
-
 1. User submits an audio sample  
 2. Audio is received by the backend  
 3. Audio is preprocessed and normalised  
-4. Data is sent to the deployed model  
-5. Model returns confidence scores  
-6. System returns a classification result to the user  
+4. Data is forwarded to the deployed model  
+5. The model returns confidence scores  
+6. The system returns a prediction to the user  
 
 ---
 
-## Limitations
+# System Architecture
 
-- Heavily compressed audio (e.g. WhatsApp voice notes) significantly reduces detection accuracy  
-- The model performs best on higher quality audio inputs  
-- Further research is required for robust detection on low bitrate, lossy audio formats  
+The final platform uses a distributed cloud architecture consisting of:
+
+| Component | Purpose |
+|---|---|
+| WhatsApp Bot | User interaction and voice note collection |
+| FastAPI Backend | Audio processing and API handling |
+| AWS SageMaker | Machine learning model inference |
+| AWS EC2 | Backend deployment and hosting |
+| Web Interface | Browser-based testing environment |
+
+This separation improves scalability, maintainability, and deployment flexibility.
 
 ---
 
-## References
+# AI Training Pipeline
 
-Tech With Tim (2025) *How To Build an API with Python (LLM Integration, FastAPI, Ollama & More)* [YouTube video]. Available at: https://www.youtube.com/watch?v=cy6EAp4iNN4  
-(Accessed: 2 December 2025)
+![AI Training Flow](aiTrainingFlow.png)
 
-Meta (n.d.) *WhatsApp Cloud API Documentation*. Available at: https://developers.facebook.com/docs/whatsapp/cloud-api  
-(Accessed: 2 December 2025)
+## Dataset
 
-Solanki, R. et al. (n.d.) *Artificial Intelligence to Combat Audio Fraud: A Flask-Deployed Hybrid Deep Learning System*. IEEE. Available at: https://ieeexplore.ieee.org/document/10778737  
-(Accessed: 2 December 2025)
+Primary dataset used:
 
-Stryker, C. (n.d.) *What is a recurrent neural network?* IBM. Available at: https://www.ibm.com/think/topics/recurrent-neural-networks  
-(Accessed: 2 December 2025)
+- ASVspoof 2019 Logical Access Dataset
 
-Jayakannan, S. M. (2025) *Securing Voice-Based Financial Authentication in the Era of AI Voice Cloning*, Journal of Computer Science and Technology Studies, 7(4), pp. 515–520.  
+Additional data:
 
-Stafford, G.A. (2025) *Fine-Tuning Wav2Vec2 for Real-Time Deepfake Audio Detection*, Data Science Collective. Available at: https://medium.com/data-science-collective/fine-tuning-wav2vec2-for-real-time-deepfake-audio-detection-b72d7efebdd7
+- Real WhatsApp voice notes
+- Compression-affected mobile recordings
+
+---
+
+## Preprocessing Pipeline
+
+The preprocessing stage includes:
+
+- Audio resampling to 16kHz mono
+- Silence trimming
+- Amplitude normalisation
+- Fixed-length segmentation
+- Windowing
+- Audio augmentation
+
+---
+
+## Augmentation Techniques
+
+To improve robustness, the following augmentations were implemented:
+
+- Opus codec simulation
+- Noise injection
+- Pitch shifting
+- Volume scaling
+- Frequency filtering
+
+---
+
+## Feature Extraction
+
+| Model | Input Type |
+|---|---|
+| Wav2Vec2 | Raw waveform |
+| LSTM | Log-Mel spectrogram |
+| CNN14 | Mel-spectrogram |
+
+---
+
+# Model Selection
+
+| Model | Architecture | Strategy |
+|---|---|---|
+| Wav2Vec2 | Transformer | Fine-tuned upper layers |
+| CNN14 | CNN | Fine-tuned classification layers |
+| LSTM | Sequential RNN | Spectrogram sequence learning |
+
+---
+
+# Evaluation Metrics
+
+The following metrics were used during evaluation:
+
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC-AUC
+- Equal Error Rate (EER)
+
+ROC-AUC was treated as the primary evaluation metric due to its suitability for binary classification problems.
+
+---
+
+# Comparative Results
+
+| Model | Performance Summary |
+|---|---|
+| Wav2Vec2 | Highest overall performance and strongest generalisation |
+| CNN14 | Strong balance of efficiency and accuracy |
+| LSTM | Good performance despite simpler architecture |
+
+---
+
+# Key Findings
+
+## Strong Performance On
+
+- High-quality recordings
+- Podcasts
+- Studio-quality speech
+- AI-generated speech samples
+
+## Performance Limitations
+
+- WhatsApp compression
+- Background noise
+- Low-quality microphones
+- Lossy audio transmission
+
+The largest challenge identified was generalisation to heavily compressed real-world audio.
+
+---
+
+# Standardised Experimental Methodology
+
+To ensure fair comparison between models:
+
+- Identical preprocessing pipeline
+- Identical dataset splits
+- Identical training configuration
+- Identical evaluation metrics
+
+Only the model architecture itself was changed between experiments.
+
+---
+
+# Technologies Used
+
+## Machine Learning
+
+- PyTorch
+- Hugging Face Transformers
+- Torchaudio
+- Scikit-learn
+
+## Backend
+
+- FastAPI
+- Python
+- FFmpeg
+
+## Cloud Infrastructure
+
+- AWS EC2
+- AWS SageMaker
+- Ngrok
+
+## Messaging Integration
+
+- WhatsApp-Web.js
+- Node.js
+
+---
+
+# Repository Structure
+
+```text
+project/
+│
+├── README.md
+├── demo.html
+├── docs/
+├── images/
+├── backend/
+├── frontend/
+├── models/
+├── training/
+└── whatsapp-bot/
+```
+
+---
+
+# Future Work
+
+Potential future improvements include:
+
+- Improved robustness to compression artefacts
+- Larger real-world datasets
+- Official WhatsApp Business API integration
+- Real-time call analysis
+- Explainable AI integration
+- Domain adaptation techniques
+
+---
+
+# Author
+
+Chris Kelleher
+
+Final Year Project  
+Deepfake Voice Detection via Deep Learning and WhatsApp Integration
+
+---
